@@ -78,6 +78,7 @@ public class NewCalculation
 
         //ищем отрезки без null длиной consultationTimeLocalTime
         for(String minute : minutesList) {
+
             if(minute == null) {
                 counter = 0;
                 continue;
@@ -85,13 +86,14 @@ public class NewCalculation
 
             if(counter == 0) {
                 startMinute = minute;
-            } else if(counter == consultationTimeLocalTime) {
-                finalList.add(startMinute + "-" + minute);
-                startMinute = minute;
-                counter = 1;
-                continue;
+            } else {
+                if (counter+1 == consultationTimeLocalTime) {
+                    finalList.add(startMinute + "-" + minute);
+                    startMinute = minute;
+                    counter = 0;
+                    continue;
+                }
             }
-
             counter++;
         }
 
