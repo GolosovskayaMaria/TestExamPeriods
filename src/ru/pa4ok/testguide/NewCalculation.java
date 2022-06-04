@@ -88,7 +88,11 @@ public class NewCalculation
                 startMinute = minute;
             } else {
                 if (counter+1 == consultationTimeLocalTime) {
-                    finalList.add(startMinute + "-" + minute);
+                    // финальное время у компьютера 08:00-08:29, но человек пишет 08:00-08:30
+                    // надо добавить минуту, что бы было, как в задании
+                    LocalTime lt = LocalTime.parse(minute);
+                    lt = lt.plusMinutes(1);
+                    finalList.add(startMinute + "-" + lt.format(format));
                     startMinute = minute;
                     counter = 0;
                     continue;
