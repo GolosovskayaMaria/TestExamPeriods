@@ -31,8 +31,7 @@ public class NewCalculation
         }
     }
 
-    public String[] getPeriods(LocalTime[] startTimes, int[] durations, int consultationTimeLocalTime,
-                               LocalTime beginWorkingTime, LocalTime endWorkingTime)
+    public String[] getPeriods(LocalTime[] startTimes, int[] durations, int consultationTimeLocalTime, LocalTime beginWorkingTime, LocalTime endWorkingTime)
     {
         //формат для времени
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
@@ -42,7 +41,7 @@ public class NewCalculation
         List<String> minutesList = new ArrayList<>();
 
         //цикл от первого до последнего часа
-        for(int i=beginWorkingTime.getHour(); i<=endWorkingTime.getHour()-1; i++) {
+        for(int i=beginWorkingTime.getHour(); i<endWorkingTime.getHour(); i++) {
             //цикл от 0 ло 59 минут
             for(int j=0; j<60; j++) {
                 //получаем объект LocalTime из часа и минуты в цикле
