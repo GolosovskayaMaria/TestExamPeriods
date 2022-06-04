@@ -41,34 +41,26 @@ public class NewCalculation
         List<String> minutesList = new ArrayList<>();
 
         //цикл от первого до последнего часа
-        for(int i=beginWorkingTime.getHour(); i<endWorkingTime.getHour(); i++) {
+        for(int i=beginWorkingTime.getHour(); i<=endWorkingTime.getHour(); i++) {
             //цикл от 0 ло 59 минут
             for(int j=0; j<60; j++) {
                 //получаем объект LocalTime из часа и минуты в цикле
                 LocalTime time = LocalTime.of(i, j);
                 //если время >= начала рабочего дня и <= конца рабочего дня
-                // Зачем это нужно? Цикл же итак по рабочему времени
-                // if(time.equals(beginWorkingTime) || time.isAfter(beginWorkingTime) && time.equals(endWorkingTime) || time.isBefore(endWorkingTime)) {
+                if(time.equals(beginWorkingTime) || time.isAfter(beginWorkingTime) && time.equals(endWorkingTime) || time.isBefore(endWorkingTime)) {
                     //форматируем и добавляем в список
                     minutesList.add(time.format(format));
-                //}
+                }
             }
         }
 
         //перебираем все занятые минуты и выставляем на их место null
-
         for(int i=0; i<startTimes.length; i++) {
             LocalTime start = startTimes[i];
-            for(int j=0; j<durations[i]; j++) { //  Почему не включены начальные минуты? 10:00 11:00 ....  Я переправила на j=1 Иначе если период станет 1 минута будут ошибки
-                int index = minutesList.indexOf(start.plusMinutes(j).format(format));
-                minutesList.set(index, null);
+            for(int j=1; j<durations[i]; j++) {
+                minutesList.set(minutesList.indexOf(start.plusMinutes(j).format(format)), null);
             }
         }
-
-//        System.out.println("\n\nСписок всех минут но все зaнятые будут null");
-//        for(String s : minutesList) {
-//            System.out.println(s);
-//        }
 
         //список с финальными отрезками
         List<String> finalList = new ArrayList<>();
@@ -78,7 +70,6 @@ public class NewCalculation
 
         //ищем отрезки без null длиной consultationTimeLocalTime
         for(String minute : minutesList) {
-
             if(minute == null) {
                 counter = 0;
                 continue;
@@ -86,18 +77,13 @@ public class NewCalculation
 
             if(counter == 0) {
                 startMinute = minute;
-            } else {
-                if (counter+1 == consultationTimeLocalTime) {
-                    // финальное время у компьютера 08:00-08:29, но человек пишет 08:00-08:30
-                    // надо добавить минуту, что бы было, как в задании
-                    LocalTime lt = LocalTime.parse(minute);
-                    lt = lt.plusMinutes(1);
-                    finalList.add(startMinute + "-" + lt.format(format));
-                    startMinute = minute;
-                    counter = 0;
-                    continue;
-                }
+            } else if(counter == consultationTimeLocalTime) {
+                finalList.add(startMinute + "-" + minute);
+                startMinute = minute;
+                counter = 1;
+                continue;
             }
+
             counter++;
         }
 
