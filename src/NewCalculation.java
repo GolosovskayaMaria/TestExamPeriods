@@ -57,10 +57,10 @@ public class NewCalculation
         }
 
         //перебираем все занятые минуты и выставляем на их место null
-        // Здесь ошибка  Время начала тоже надо включать!!! 10:00 11:00 ....
+
         for(int i=0; i<startTimes.length; i++) {
             LocalTime start = startTimes[i];
-            for(int j=0; j<durations[i]; j++) {
+            for(int j=0; j<durations[i]; j++) { //  Почему не включены начальные минуты? 10:00 11:00 ....  Я переправила на j=1 Иначе если период станет 1 минута будут ошибки
                 int index = minutesList.indexOf(start.plusMinutes(j).format(format));
                 minutesList.set(index, null);
             }
